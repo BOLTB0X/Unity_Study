@@ -36,6 +36,15 @@ public class Player : MonoBehaviour
             transform.position += movoTo;
         }
 
+        else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+        {
+            transform.position += new Vector3(0f, moveSpeed * Time.deltaTime, 0f);
+        }
+        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+        {
+            transform.position -= new Vector3(0f, moveSpeed * Time.deltaTime, 0f);
+        }
+
         Shoot();
 
         //Debug.Log(Input.mousePosition);
