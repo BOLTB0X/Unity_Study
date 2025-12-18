@@ -6,7 +6,8 @@ public class Player : MonoBehaviour
     private float moveSpeed;
 
     [SerializeField]
-    private GameObject weapon;
+    private GameObject[] weapons;
+    private int weaponIndex = 0;
 
     [SerializeField]
     private Transform shootTransform;
@@ -36,14 +37,14 @@ public class Player : MonoBehaviour
             transform.position += movoTo;
         }
 
-        else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
-        {
-            transform.position += new Vector3(0f, moveSpeed * Time.deltaTime, 0f);
-        }
-        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
-        {
-            transform.position -= new Vector3(0f, moveSpeed * Time.deltaTime, 0f);
-        }
+        // else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+        // {
+        //     transform.position += new Vector3(0f, moveSpeed * Time.deltaTime, 0f);
+        // }
+        // else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+        // {
+        //     transform.position -= new Vector3(0f, moveSpeed * Time.deltaTime, 0f);
+        // }
 
         Shoot();
 
@@ -60,7 +61,32 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        Instantiate(weapon, shootTransform.position, Quaternion.identity);
+        Instantiate(weapons[weaponIndex], shootTransform.position, Quaternion.identity);
         lastShootTime = Time.time;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            Debug.Log("게임 오버");
+            Destroy(gameObject);
+        }
+        else if (other.gameObject.tag == "Coin")
+        {
+            //Debug.Log("코인 + 1");
+            GameManager.instance.IncreaseCoin();
+            Destroy(other.gameObject);
+        }
+    }
+
+    public void Upgrade()
+    {
+        if (weapons.Length == 2)
+        {
+            return;
+        }
+
+        weaponIndex++;
     }
 }

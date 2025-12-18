@@ -4,6 +4,8 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed;
+    [SerializeField]
+    public float damage;
 
     void Start()
     {
