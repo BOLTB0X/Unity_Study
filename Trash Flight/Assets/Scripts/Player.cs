@@ -46,7 +46,10 @@ public class Player : MonoBehaviour
         //     transform.position -= new Vector3(0f, moveSpeed * Time.deltaTime, 0f);
         // }
 
-        Shoot();
+        if (GameManager.instance.isGameOver == false)
+        {
+            Shoot();
+        }
 
         //Debug.Log(Input.mousePosition);
         // Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -67,9 +70,10 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Boss")
         {
-            Debug.Log("게임 오버");
+            //Debug.Log("게임 오버");
+            GameManager.instance.SetGameOver();
             Destroy(gameObject);
         }
         else if (other.gameObject.tag == "Coin")
@@ -82,7 +86,7 @@ public class Player : MonoBehaviour
 
     public void Upgrade()
     {
-        if (weapons.Length == 2)
+        if (weaponIndex == 2)
         {
             return;
         }

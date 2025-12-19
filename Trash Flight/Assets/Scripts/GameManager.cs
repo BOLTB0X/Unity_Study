@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +10,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI coinText;
     private int coin = 0;
+
+    [SerializeField]
+    private GameObject gameOverPanel;
+
+    [HideInInspector]
+    public bool isGameOver = false;
 
     private void Awake()
     {
@@ -30,5 +38,28 @@ public class GameManager : MonoBehaviour
                 player.Upgrade();
             }
         }
+    }
+
+    public void SetGameOver()
+    {
+        isGameOver = true;
+
+        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        if (spawner != null)
+        {
+            spawner.StopEnemyRoutine();
+        }
+        
+        Invoke("ShowGameOverPanel", 0.6f);
+    }
+
+    void ShowGameOverPanel()
+    {
+        gameOverPanel.SetActive(true);
+    }
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene("SampleScene");
     }
 }

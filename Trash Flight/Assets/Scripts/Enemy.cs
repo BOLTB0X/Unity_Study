@@ -35,6 +35,10 @@ public class Enemy : MonoBehaviour
             hp -= weapon.damage;
             if (hp <= 0f)
             {
+                if (gameObject.tag == "Boss")
+                {
+                    GameManager.instance.SetGameOver();
+                }
                 Destroy(gameObject);
                 Instantiate(coin, transform.position, Quaternion.identity);
             }
