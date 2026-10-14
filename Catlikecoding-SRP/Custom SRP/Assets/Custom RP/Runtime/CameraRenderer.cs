@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Profiling;
 
 public partial class CameraRenderer
 {
@@ -11,6 +12,14 @@ public partial class CameraRenderer
     Camera camera;
     CullingResults cullingResults;
 
+#if UNITY_EDITOR
+    string SampleName { get; set; }
+#else
+    const string SampleName = bufferName;
+#endif
+
+    partial void PrepareBuffer();
+    partial void PrepareForSceneWindow();
     partial void DrawGizmos();
     partial void DrawUnsupportedShaders();
 
@@ -18,6 +27,9 @@ public partial class CameraRenderer
     {
         this.context = context;
         this.camera = camera;
+
+        PrepareBuffer();
+        PrepareForSceneWindow();
         
         if (!Cull()) { return; }
 
@@ -40,14 +52,21 @@ public partial class CameraRenderer
     void Setup()
     {
         context.SetupCameraProperties(camera);
-        buffer.BeginSample(bufferName);
-        buffer.ClearRenderTarget(true, true, Color.clear);
+        CameraClearFlags flags = camera.clearFlags;
+        //buffer.ClearRenderTarget(true, true, Color.clear);
+        buffer.ClearRenderTarget(
+			flags <= CameraClearFlags.Depth,
+			flags == CameraClearFlags.Color,
+			flags == CameraClearFlags.Color ?
+				camera.backgroundColor.linear : Color.clear
+		);
+        buffer.BeginSample(SampleName);
         ExecuteBuffer();
     }
 
     void Submit()
     {
-        buffer.EndSample(bufferName);
+        buffer.EndSample(SampleName);
         ExecuteBuffer();
         context.Submit();
     }
@@ -76,7 +95,6 @@ public partial class CameraRenderer
 }
 
 #if UNITY_EDITOR
-
 public partial class CameraRenderer
 {
     static ShaderTagId[] legacyShaderTagIds = {
@@ -89,6 +107,21 @@ public partial class CameraRenderer
     };
 
     static Material errorMaterial;
+
+    partial void PrepareBuffer ()
+    {
+        Profiler.BeginSample("Editor Only");
+        buffer.name = camera.name;
+        SampleName = camera.name;
+        Profiler.EndSample();
+    }
+
+    partial void PrepareForSceneWindow ()
+    {
+        if (camera.cameraType == CameraType.SceneView) {
+            ScriptableRenderContext.EmitWorldGeometryForSceneView(camera);
+        }
+    }
 
     partial void DrawUnsupportedShaders()
     {
