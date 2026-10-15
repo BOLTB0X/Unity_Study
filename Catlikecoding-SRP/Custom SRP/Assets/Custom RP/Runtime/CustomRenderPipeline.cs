@@ -8,7 +8,12 @@ public class CustomRenderPipeline : RenderPipeline
 
     private List<Camera> _cameraList = new List<Camera>();
 
-    protected override void Render (
+    public CustomRenderPipeline ()
+    {
+		GraphicsSettings.useScriptableRenderPipelineBatching = true;
+	}
+
+    protected override void Render(
 		ScriptableRenderContext context, Camera[] cameras
 	)
     {
