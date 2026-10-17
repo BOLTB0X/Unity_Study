@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e690051e2c2dc49e59e3dbcdf2f53e23, type: 3}
   m_Name: Custom Render Pipeline Asset
   m_EditorClassIdentifier: Assembly-CSharp::CustomRenderPipelineAsset
+  useGPUInstancing: 1
+  useSRPBatcher: 1

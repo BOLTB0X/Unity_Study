@@ -23,18 +23,21 @@ public partial class CameraRenderer
     partial void DrawGizmos();
     partial void DrawUnsupportedShaders();
 
-    public void Render(ScriptableRenderContext context, Camera camera)
+    public void Render (ScriptableRenderContext context, Camera camera, bool useGPUInstancing)
     {
         this.context = context;
         this.camera = camera;
 
         PrepareBuffer();
         PrepareForSceneWindow();
-        
-        if (!Cull()) { return; }
+        if (!Cull()) {
+            return;
+        }
 
         Setup();
-        DrawVisibleGeometry();
+        
+        DrawVisibleGeometry(useGPUInstancing); 
+        
         DrawUnsupportedShaders();
         DrawGizmos();
         Submit();
@@ -77,10 +80,14 @@ public partial class CameraRenderer
         buffer.Clear();
     }
 
-    void DrawVisibleGeometry()
+    void DrawVisibleGeometry(bool useGPUInstancing)
     {
         var sortingSettings = new SortingSettings(camera) { criteria = SortingCriteria.CommonOpaque };
-        var drawingSettings = new DrawingSettings(unlitShaderTagId, sortingSettings);
+        var drawingSettings = new DrawingSettings(
+			unlitShaderTagId, sortingSettings
+		) {
+			enableInstancing = useGPUInstancing
+		};
         var filteringSettings = new FilteringSettings(RenderQueueRange.all);
 
         context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
