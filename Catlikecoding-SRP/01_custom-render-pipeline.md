@@ -33,7 +33,7 @@
               Unity
                 │
                 ▼
-       B0XRenderPipeline
+       RenderPipeline
                 │
                 ▼
              Camera
