@@ -13,6 +13,8 @@ public partial class CameraRenderer
     Camera camera;
     CullingResults cullingResults;
 
+    Lighting lighting = new Lighting();
+
 #if UNITY_EDITOR
     string SampleName { get; set; }
 #else
@@ -36,7 +38,7 @@ public partial class CameraRenderer
         }
 
         Setup();
-        
+        lighting.Setup(context, cullingResults);
         DrawVisibleGeometry(useGPUInstancing); 
         
         DrawUnsupportedShaders();
@@ -85,7 +87,7 @@ public partial class CameraRenderer
     {
         var sortingSettings = new SortingSettings(camera) { criteria = SortingCriteria.CommonOpaque };
         var drawingSettings = new DrawingSettings(
-			unlitShaderTagId, sortingSettings
+			litShaderTagId, sortingSettings
 		) {
 			enableInstancing = useGPUInstancing
 		};
