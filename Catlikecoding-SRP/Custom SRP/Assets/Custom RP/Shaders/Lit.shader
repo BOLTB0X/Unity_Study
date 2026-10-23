@@ -24,6 +24,8 @@ Shader "Custom RP/Shaders/Lit" {
 
             HLSLPROGRAM
 			#pragma target 3.5
+			#pragma shader_feature _CLIPPING
+			#pragma shader_feature _PREMULTIPLY_ALPHA
 			#pragma multi_compile_instancing
 			#pragma vertex LitPassVertex
 			#pragma fragment LitPassFragment
@@ -31,4 +33,6 @@ Shader "Custom RP/Shaders/Lit" {
 			ENDHLSL
 		}
 	}
+
+	CustomEditor "CustomShaderGUI"
 }

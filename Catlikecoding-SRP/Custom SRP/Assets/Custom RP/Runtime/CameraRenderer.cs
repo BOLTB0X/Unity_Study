@@ -6,7 +6,8 @@ using UnityEngine.Profiling;
 public partial class CameraRenderer
 {
     const string bufferName = "Render Camera";
-    static ShaderTagId unlitShaderTagId = new ShaderTagId("SRPDefaultUnlit"),
+    static ShaderTagId
+        unlitShaderTagId = new ShaderTagId("SRPDefaultUnlit"),
         litShaderTagId = new ShaderTagId("CustomLit");
     CommandBuffer buffer = new CommandBuffer { name = bufferName };
     ScriptableRenderContext context;
